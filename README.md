@@ -1,5 +1,6 @@
 # subgradient-lean
 
+[![thread](https://img.shields.io/badge/%F0%9F%A7%B5-how%20it%20works-1DA1F2)](https://x.com/thevelvetmonke)
 [![Lean 4](https://img.shields.io/badge/Lean-4.28.0-blue)](https://lean-lang.org/)
 [![Mathlib](https://img.shields.io/badge/Mathlib-v4.28.0-purple)](https://github.com/leanprover-community/mathlib4)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -12,7 +13,15 @@ Lean 4 formal proofs of the subgradient method for non-smooth convex optimisatio
 
 **Zero sorry statements.** Standard axioms only (`propext`, `Classical.choice`, `Quot.sound`).
 
-## Why it matters
+## What this is, and why it matters
+
+The headline theorem is `subgradient_convergence` in `SubgradientLean/Convergence.lean`. With step size `R / (G√K)`, it proves that some index `i < K` has objective gap at most `RG / √K`.
+
+The core calculation bounds the squared distance after one subgradient step using the defining global subgradient inequality and the uniform norm bound `G`. Summing those bounds telescopes the distance terms. An averaging argument then rules out the possibility that every one of the first `K` gaps exceeds the target rate.
+
+The conclusion is existential: it controls the best iterate seen, not necessarily the final iterate. The theorem does not assert per-step objective descent. It also bundles positivity, the exact constant step size, the initial-distance identity, a global minimizer, valid subgradients, and their norm bound as hypotheses of the run.
+
+## Background and motivation
 
 Gradient descent needs a gradient — but many important convex objectives (ℓ₁ penalties, hinge loss, max-of-linear functions) are non-smooth and have no gradient at the points that matter most. The subgradient method replaces ∇f(x) with *any* subgradient g ∈ ∂f(x) and still converges, which is why it is the baseline algorithm for non-smooth convex optimisation. This library machine-checks its O(1/√K) guarantee.
 
